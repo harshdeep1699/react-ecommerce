@@ -13,10 +13,30 @@ const config = {
     measurementId: "G-ZTCC74K95Z"
   };
 
+  export const createUserDocument= async(user)=>{
+    if(!user) return;
+    const dat=(await firestore.doc(`users/${user.uid}`).get());
+    if(!dat.exists)
+    {
+      const displayName=user.displayName;
+      const email= user.email;
+      const date= new Date();
+      await firestore.doc(`users/${user.uid}`).set({
+        displayName,
+        date,
+        email
+      }  
+      )
+    }
+  
+  }
+
 firebase.initializeApp(config);
 
+
+
 export const auth=firebase.auth();
-export const firestore= firebase.firestore;
+export const firestore= firebase.firestore();
 const provider = new firebase.auth.GoogleAuthProvider();
 
 export const signInWithGoogle=()=>firebase.auth().signInWithPopup(provider);
